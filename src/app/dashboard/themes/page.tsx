@@ -3,10 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import {
-  PaintBrushIcon,
-  ArrowRightIcon
-} from '@heroicons/react/24/outline';
+import { PaintBrushIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { Button, Card } from '@/components/ui';
 
 export default function ThemesPage() {
@@ -37,8 +34,9 @@ export default function ThemesPage() {
               Themes Moved!
             </h1>
             <p className="text-gray-600 mb-6">
-              Theme customization is now integrated directly into your Link Pages. 
-              You can edit themes by clicking the "Edit" button on any link page.
+              Theme customization is now integrated directly into your Link
+              Pages. You can edit themes by clicking the &quot;Edit&quot; button
+              on any link page.
             </p>
           </div>
 
@@ -51,7 +49,7 @@ export default function ThemesPage() {
               Go to Dashboard
               <ArrowRightIcon className="w-4 h-4" />
             </Button>
-            
+
             <p className="text-sm text-gray-500">
               Redirecting automatically in 3 seconds...
             </p>
@@ -60,4 +58,4 @@ export default function ThemesPage() {
       </motion.div>
     </div>
   );
-} 
+}

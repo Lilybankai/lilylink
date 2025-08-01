@@ -1,5 +1,3 @@
-import type { OrganizationMember } from '@/types';
-
 // Permission definitions
 export const PERMISSIONS = {
   // Organization management
@@ -7,31 +5,31 @@ export const PERMISSIONS = {
   ORGANIZATION_EDIT: 'organization:edit',
   ORGANIZATION_DELETE: 'organization:delete',
   ORGANIZATION_SETTINGS: 'organization:settings',
-  
+
   // Member management
   MEMBER_VIEW: 'member:view',
   MEMBER_INVITE: 'member:invite',
   MEMBER_EDIT: 'member:edit',
   MEMBER_REMOVE: 'member:remove',
-  
+
   // Profile management
   PROFILE_VIEW: 'profile:view',
   PROFILE_ADD: 'profile:add',
   PROFILE_EDIT: 'profile:edit',
   PROFILE_REMOVE: 'profile:remove',
   PROFILE_ASSIGN: 'profile:assign',
-  
+
   // Analytics
   ANALYTICS_VIEW: 'analytics:view',
   ANALYTICS_EXPORT: 'analytics:export',
-  
+
   // White-label features
   BRANDING_EDIT: 'branding:edit',
   CUSTOM_DOMAIN: 'custom:domain',
   WHITE_LABEL: 'white:label',
 } as const;
 
-export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
+export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
 
 // Role-based permission mapping
 export const ROLE_PERMISSIONS: Record<string, Permission[]> = {
@@ -101,7 +99,7 @@ export function hasPermission(
   if (customPermissions && permission in customPermissions) {
     return customPermissions[permission];
   }
-  
+
   // Check role-based permissions
   const rolePermissions = ROLE_PERMISSIONS[userRole] || [];
   return rolePermissions.includes(permission);
@@ -112,7 +110,7 @@ export function hasAnyPermission(
   permissions: Permission[],
   customPermissions?: Record<string, boolean>
 ): boolean {
-  return permissions.some(permission => 
+  return permissions.some(permission =>
     hasPermission(userRole, permission, customPermissions)
   );
 }
@@ -122,7 +120,7 @@ export function hasAllPermissions(
   permissions: Permission[],
   customPermissions?: Record<string, boolean>
 ): boolean {
-  return permissions.every(permission => 
+  return permissions.every(permission =>
     hasPermission(userRole, permission, customPermissions)
   );
 }
@@ -135,12 +133,12 @@ export function canManageMember(
 ): boolean {
   // Owners can manage anyone
   if (isOwner) return true;
-  
+
   // Admins can manage members and viewers, but not other admins or owners
   if (userRole === 'admin') {
     return ['member', 'viewer'].includes(targetMemberRole);
   }
-  
+
   // Members and viewers cannot manage others
   return false;
 }
@@ -154,17 +152,17 @@ export function canAccessProfile(
 ): boolean {
   // Organization admins and owners can access any profile
   if (isOrgAdmin || userRole === 'owner') return true;
-  
+
   // Members can only access assigned profiles
   if (userRole === 'member' && isAssigned) {
     return true;
   }
-  
+
   // Viewers can view any profile but not edit
   if (userRole === 'viewer' && profileAccess === 'view') {
     return true;
   }
-  
+
   return false;
 }
 
@@ -175,12 +173,49 @@ export function hasSubscriptionFeature(
 ): boolean {
   const tierFeatures: Record<string, string[]> = {
     free: ['basic_analytics', 'basic_themes'],
-    starter: ['basic_analytics', 'basic_themes', 'custom_themes', 'remove_branding'],
-    pro: ['basic_analytics', 'basic_themes', 'custom_themes', 'remove_branding', 'custom_domain', 'advanced_analytics', 'ai_features'],
-    agency: ['basic_analytics', 'basic_themes', 'custom_themes', 'remove_branding', 'custom_domain', 'advanced_analytics', 'ai_features', 'white_label', 'team_management', 'bulk_operations'],
-    enterprise: ['basic_analytics', 'basic_themes', 'custom_themes', 'remove_branding', 'custom_domain', 'advanced_analytics', 'ai_features', 'white_label', 'team_management', 'bulk_operations', 'priority_support', 'custom_integrations'],
+    starter: [
+      'basic_analytics',
+      'basic_themes',
+      'custom_themes',
+      'remove_branding',
+    ],
+    pro: [
+      'basic_analytics',
+      'basic_themes',
+      'custom_themes',
+      'remove_branding',
+      'custom_domain',
+      'advanced_analytics',
+      'ai_features',
+    ],
+    agency: [
+      'basic_analytics',
+      'basic_themes',
+      'custom_themes',
+      'remove_branding',
+      'custom_domain',
+      'advanced_analytics',
+      'ai_features',
+      'white_label',
+      'team_management',
+      'bulk_operations',
+    ],
+    enterprise: [
+      'basic_analytics',
+      'basic_themes',
+      'custom_themes',
+      'remove_branding',
+      'custom_domain',
+      'advanced_analytics',
+      'ai_features',
+      'white_label',
+      'team_management',
+      'bulk_operations',
+      'priority_support',
+      'custom_integrations',
+    ],
   };
-  
+
   const features = tierFeatures[subscriptionTier] || [];
   return features.includes(feature);
 }
@@ -202,11 +237,13 @@ export function getOrganizationLimits(subscriptionTier: string) {
       prioritySupport: true,
     },
   };
-  
-  return limits[subscriptionTier] || {
-    maxProfiles: 10,
-    maxMembers: 5,
-    customDomains: 1,
-    whiteLabel: false,
-  };
+
+  return (
+    limits[subscriptionTier] || {
+      maxProfiles: 10,
+      maxMembers: 5,
+      customDomains: 1,
+      whiteLabel: false,
+    }
+  );
 }

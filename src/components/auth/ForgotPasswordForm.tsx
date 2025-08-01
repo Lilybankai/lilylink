@@ -4,10 +4,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase/client';
-import { passwordResetRequestSchema, type PasswordResetRequestInput } from '@/lib/validations/auth';
+import {
+  passwordResetRequestSchema,
+  type PasswordResetRequestInput,
+} from '@/lib/validations/auth';
 import { handleAuthError } from '@/lib/auth/client';
 import { Input, LoadingButton, Alert } from '@/components/ui';
-import { CheckCircleIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
 
 export function ForgotPasswordForm() {
   const [authError, setAuthError] = useState<string | null>(null);
@@ -31,7 +35,7 @@ export function ForgotPasswordForm() {
 
       console.log('🔐 Password Reset Request:', {
         email: data.email,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
@@ -41,11 +45,11 @@ export function ForgotPasswordForm() {
       if (error) {
         console.error('🔐 Password Reset Error:', {
           error: error.message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         const authError = handleAuthError(error);
-        
+
         if (authError.field) {
           setError(authError.field as keyof PasswordResetRequestInput, {
             type: 'manual',
@@ -59,7 +63,7 @@ export function ForgotPasswordForm() {
 
       console.log('🔐 Password Reset Email Sent:', {
         email: data.email,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       setEmailAddress(data.email);
@@ -67,7 +71,7 @@ export function ForgotPasswordForm() {
     } catch (error) {
       console.error('🔐 Password Reset Exception:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
       setAuthError('An unexpected error occurred. Please try again.');
     } finally {
@@ -81,27 +85,28 @@ export function ForgotPasswordForm() {
         <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
           <EnvelopeIcon className="h-8 w-8 text-blue-600" />
         </div>
-        
+
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             Check your email
           </h3>
           <p className="text-gray-600 mb-4">
-            We've sent a password reset link to{' '}
+            We&apos;ve sent a password reset link to{' '}
             <span className="font-medium">{emailAddress}</span>
           </p>
           <p className="text-sm text-gray-500 mb-6">
-            Click the link in your email to reset your password. The link will expire in 1 hour.
+            Click the link in your email to reset your password. The link will
+            expire in 1 hour.
           </p>
-          
+
           <div className="space-y-3">
-            <button 
+            <button
               onClick={() => setEmailSent(false)}
               className="text-purple-600 hover:text-purple-700 text-sm font-medium transition-colors"
             >
-              Didn't receive the email? Try again
+              Didn&apos;t receive the email? Try again
             </button>
-            
+
             <p className="text-xs text-gray-500">
               Make sure to check your spam folder
             </p>
@@ -115,8 +120,8 @@ export function ForgotPasswordForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* General Error Alert */}
       {authError && (
-        <Alert 
-          variant="error" 
+        <Alert
+          variant="error"
           title="Reset request failed"
           description={authError}
           dismissible
@@ -129,13 +134,17 @@ export function ForgotPasswordForm() {
           <EnvelopeIcon className="h-6 w-6 text-purple-600" />
         </div>
         <p className="text-gray-600 text-sm">
-          Enter the email address associated with your account and we'll send you a link to reset your password.
+          Enter the email address associated with your account and we&apos;ll
+          send you a link to reset your password.
         </p>
       </div>
 
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Email address
         </label>
         <Input
@@ -168,11 +177,14 @@ export function ForgotPasswordForm() {
       <div className="text-center">
         <p className="text-xs text-gray-500">
           Remember your password?{' '}
-          <a href="/auth/login" className="text-purple-600 hover:text-purple-700 underline">
+          <Link
+            href="/auth/login"
+            className="text-purple-600 hover:text-purple-700 underline"
+          >
             Sign in instead
-          </a>
+          </Link>
         </p>
       </div>
     </form>
   );
-} 
+}

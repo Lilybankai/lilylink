@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import {
   ChartBarIcon,
   EyeIcon,
@@ -9,9 +8,8 @@ import {
   GlobeAltIcon,
   DevicePhoneMobileIcon,
   ComputerDesktopIcon,
-  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
-import { Card, Button, Badge } from '@/components/ui';
+import { Card, Button } from '@/components/ui';
 import { getDashboardAnalytics, type AnalyticsData } from '@/lib/api/analytics';
 import type { LinkPage } from '@/types';
 
@@ -37,7 +35,7 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
 
     try {
       const response = await getDashboardAnalytics(selectedPage?.id, dateRange);
-      
+
       if (response.success) {
         setAnalytics(response.data);
       } else {
@@ -77,9 +75,11 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics</h1>
-          <p className="text-gray-600">Track your link performance and audience engagement.</p>
+          <p className="text-gray-600">
+            Track your link performance and audience engagement.
+          </p>
         </div>
-        
+
         <Card className="p-12 text-center">
           <div className="max-w-sm mx-auto">
             <div className="h-16 w-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -103,9 +103,11 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics</h1>
-          <p className="text-gray-600">Track your link performance and audience engagement.</p>
+          <p className="text-gray-600">
+            Track your link performance and audience engagement.
+          </p>
         </div>
-        
+
         <Card className="p-12 text-center">
           <div className="max-w-sm mx-auto">
             <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -130,16 +132,15 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics</h1>
           <p className="text-gray-600">
-            {selectedPage 
+            {selectedPage
               ? `Analytics for "${selectedPage.title}"`
-              : 'Track your link performance and audience engagement'
-            }
+              : 'Track your link performance and audience engagement'}
           </p>
         </div>
-        
+
         {/* Date Range Selector */}
         <div className="flex gap-2">
-          {dateRangeOptions.map((option) => (
+          {dateRangeOptions.map(option => (
             <Button
               key={option.value}
               variant={dateRange === option.value ? 'primary' : 'ghost'}
@@ -158,37 +159,45 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-purple-100 text-sm">Total Links</p>
-              <p className="text-3xl font-bold">{analytics.totalLinks.toLocaleString()}</p>
+              <p className="text-3xl font-bold">
+                {analytics.totalLinks.toLocaleString()}
+              </p>
             </div>
             <ChartBarIcon className="h-8 w-8 text-purple-200" />
           </div>
         </Card>
-        
+
         <Card className="p-6 bg-gradient-to-br from-pink-500 to-pink-600 text-white border-0">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-pink-100 text-sm">Total Clicks</p>
-              <p className="text-3xl font-bold">{analytics.totalClicks.toLocaleString()}</p>
+              <p className="text-3xl font-bold">
+                {analytics.totalClicks.toLocaleString()}
+              </p>
             </div>
             <CursorArrowRaysIcon className="h-8 w-8 text-pink-200" />
           </div>
         </Card>
-        
+
         <Card className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-100 text-sm">Page Views</p>
-              <p className="text-3xl font-bold">{analytics.totalViews.toLocaleString()}</p>
+              <p className="text-3xl font-bold">
+                {analytics.totalViews.toLocaleString()}
+              </p>
             </div>
             <EyeIcon className="h-8 w-8 text-blue-200" />
           </div>
         </Card>
-        
+
         <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 text-white border-0">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100 text-sm">Click Through Rate</p>
-              <p className="text-3xl font-bold">{analytics.clickThroughRate.toFixed(1)}%</p>
+              <p className="text-3xl font-bold">
+                {analytics.clickThroughRate.toFixed(1)}%
+              </p>
             </div>
             <ChartBarIcon className="h-8 w-8 text-green-200" />
           </div>
@@ -204,22 +213,29 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
           </h3>
           <div className="space-y-4">
             {analytics.dailyStats.slice(-7).map((stat, index) => (
-              <div key={stat.date} className="flex items-center justify-between">
+              <div
+                key={stat.date}
+                className="flex items-center justify-between"
+              >
                 <div className="text-sm text-gray-600">
-                  {new Date(stat.date).toLocaleDateString('en-US', { 
-                    weekday: 'short', 
-                    month: 'short', 
-                    day: 'numeric' 
+                  {new Date(stat.date).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
                   })}
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm font-medium">{stat.views} views</span>
+                    <span className="text-sm font-medium">
+                      {stat.views} views
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
-                    <span className="text-sm font-medium">{stat.clicks} clicks</span>
+                    <span className="text-sm font-medium">
+                      {stat.clicks} clicks
+                    </span>
                   </div>
                 </div>
               </div>
@@ -235,7 +251,10 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
           </h3>
           <div className="space-y-3">
             {analytics.topCountries.slice(0, 5).map((country, index) => (
-              <div key={country.country} className="flex items-center justify-between">
+              <div
+                key={country.country}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium">
                     {index + 1}
@@ -265,8 +284,11 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
             Device Breakdown
           </h3>
           <div className="space-y-3">
-            {analytics.deviceBreakdown.map((device) => (
-              <div key={device.device} className="flex items-center justify-between">
+            {analytics.deviceBreakdown.map(device => (
+              <div
+                key={device.device}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-3">
                   {device.device === 'Mobile' ? (
                     <DevicePhoneMobileIcon className="h-5 w-5 text-gray-400" />
@@ -295,19 +317,24 @@ export function AnalyticsDashboard({ selectedPage }: AnalyticsDashboardProps) {
           </h3>
           <div className="space-y-3">
             {analytics.topReferrers.slice(0, 5).map((referrer, index) => (
-              <div key={referrer.referrer} className="flex items-center justify-between">
+              <div
+                key={referrer.referrer}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium">
                     {index + 1}
                   </div>
                   <span className="text-sm font-medium truncate max-w-[200px]">
-                    {referrer.referrer === 'Direct' ? 'Direct' : (() => {
-                      try {
-                        return new URL(referrer.referrer).hostname;
-                      } catch {
-                        return referrer.referrer;
-                      }
-                    })()}
+                    {referrer.referrer === 'Direct'
+                      ? 'Direct'
+                      : (() => {
+                          try {
+                            return new URL(referrer.referrer).hostname;
+                          } catch {
+                            return referrer.referrer;
+                          }
+                        })()}
                   </span>
                 </div>
                 <div className="text-sm text-gray-600">
