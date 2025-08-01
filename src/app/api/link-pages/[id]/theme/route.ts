@@ -28,22 +28,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         },
       }
     );
-    
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
 
     const pageId = resolvedParams.id;
 
-    // Get link page with theme configuration
+    // Get link page with theme configuration (public endpoint)
     const { data: linkPage, error } = await supabase
       .from('link_pages')
-      .select(`
+      .select(
+        `
         theme_config,
         background_config,
         typography_config,
@@ -54,9 +46,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           custom_config,
           theme:themes(config)
         )
-      `)
+      `
+      )
       .eq('id', pageId)
-      .eq('user_id', user.id)
       .single();
 
     if (error) {
@@ -69,7 +61,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Merge theme configurations in order of priority:
     // 1. Base theme config (lowest priority)
-    // 2. User theme customizations 
+    // 2. User theme customizations
     // 3. Page-specific theme config (highest priority)
     let mergedConfig: any = null;
 
@@ -80,7 +72,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Apply user theme customizations
     if (linkPage.user_theme?.custom_config) {
-      mergedConfig = mergedConfig 
+      mergedConfig = mergedConfig
         ? { ...mergedConfig, ...linkPage.user_theme.custom_config }
         : linkPage.user_theme.custom_config;
     }
@@ -88,23 +80,26 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Apply page-specific configurations
     const pageConfigs = {
       ...(linkPage.theme_config || {}),
-      ...(linkPage.background_config ? { background: linkPage.background_config } : {}),
-      ...(linkPage.typography_config ? { typography: linkPage.typography_config } : {}),
+      ...(linkPage.background_config
+        ? { background: linkPage.background_config }
+        : {}),
+      ...(linkPage.typography_config
+        ? { typography: linkPage.typography_config }
+        : {}),
       ...(linkPage.layout_config ? { layout: linkPage.layout_config } : {}),
-      ...(linkPage.brand_config ? { brand: linkPage.brand_config } : {})
+      ...(linkPage.brand_config ? { brand: linkPage.brand_config } : {}),
     };
 
     if (Object.keys(pageConfigs).length > 0) {
-      mergedConfig = mergedConfig 
+      mergedConfig = mergedConfig
         ? { ...mergedConfig, ...pageConfigs }
         : pageConfigs;
     }
 
     return NextResponse.json({
       data: mergedConfig,
-      success: true
+      success: true,
     });
-
   } catch (error) {
     console.error('Error in GET /api/link-pages/[id]/theme:', error);
     return NextResponse.json(
@@ -130,35 +125,38 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         },
       }
     );
-    
+
     // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const pageId = resolvedParams.id;
     const body = await request.json();
-    
+
     console.log('Received theme config body:', JSON.stringify(body, null, 2));
-    
+
     try {
       const validatedData = ThemeConfigSchema.parse(body);
       console.log('Theme config validation successful:', validatedData);
     } catch (validationError) {
       console.error('Theme config validation failed:', validationError);
       return NextResponse.json(
-        { 
+        {
           error: 'Invalid theme configuration',
-          details: validationError instanceof z.ZodError ? validationError.errors : validationError
+          details:
+            validationError instanceof z.ZodError
+              ? validationError.errors
+              : validationError,
         },
         { status: 400 }
       );
     }
-    
+
     const validatedData = ThemeConfigSchema.parse(body);
 
     // Verify user owns this link page
@@ -178,7 +176,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     // Update the link page with new theme configuration
     const updateData: any = {
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     };
 
     // Store the complete theme config
@@ -221,9 +219,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({
       data: updatedPage,
-      success: true
+      success: true,
     });
-
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -243,7 +240,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // PATCH /api/link-pages/[id]/theme - Apply a user theme to a link page
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
+    const resolvedParams = await params;
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -255,17 +253,17 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         },
       }
     );
-    
+
     // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const pageId = params.id;
+    const pageId = resolvedParams.id;
     const body = await request.json();
     const { userThemeId } = body;
 
@@ -289,7 +287,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         .select('id')
         .eq('id', userThemeId)
         .eq('user_id', user.id)
-        .single()
+        .single(),
     ]);
 
     if (pageResult.error || !pageResult.data) {
@@ -311,7 +309,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       .from('link_pages')
       .update({
         user_theme_id: userThemeId,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq('id', pageId)
       .eq('user_id', user.id)
@@ -328,9 +326,8 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({
       data: updatedPage,
-      success: true
+      success: true,
     });
-
   } catch (error) {
     console.error('Error in PATCH /api/link-pages/[id]/theme:', error);
     return NextResponse.json(
@@ -338,4 +335,4 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       { status: 500 }
     );
   }
-} 
+}
