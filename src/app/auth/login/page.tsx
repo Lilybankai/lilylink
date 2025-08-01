@@ -11,28 +11,26 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Welcome back
           </h1>
-          <p className="text-gray-600 mt-2">
-            Sign in to your Lilylink account
-          </p>
+          <p className="text-gray-600 mt-2">Sign in to your Lilylink account</p>
         </div>
 
         {/* Login Form Card */}
         <Card className="p-8 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
           <LoginForm />
-          
+
           {/* Footer Links */}
           <div className="mt-6 text-center space-y-2">
-            <Link 
-              href="/auth/forgot-password" 
+            <Link
+              href="/auth/forgot-password"
               className="text-sm text-purple-600 hover:text-purple-700 transition-colors"
             >
               Forgot your password?
             </Link>
-            
+
             <div className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link 
-                href="/auth/register" 
+              Don&apos;t have an account?{' '}
+              <Link
+                href="/auth/register"
                 className="text-purple-600 hover:text-purple-700 font-medium transition-colors"
               >
                 Sign up
@@ -55,4 +53,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}

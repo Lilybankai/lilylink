@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   console.log('🔍 Middleware Debug:', {
     path: request.nextUrl.pathname,
     method: request.method,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
   // Skip middleware for static files, API routes, and auth routes
@@ -18,10 +18,10 @@ export async function middleware(request: NextRequest) {
     '/register',
     '/forgot-password',
     '/reset-password',
-    '/verify-email'
+    '/verify-email',
   ];
 
-  const shouldSkip = skipPaths.some(path => 
+  const shouldSkip = skipPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   );
 
@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  let supabaseResponse = NextResponse.next({
+  const supabaseResponse = NextResponse.next({
     request,
   });
 
@@ -64,19 +64,25 @@ export async function middleware(request: NextRequest) {
     path: request.nextUrl.pathname,
     hasUser: !!user,
     userId: user?.id,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
   // Only redirect to login if user is not authenticated and trying to access protected routes
   if (!user) {
-    console.log('🚫 No user found, redirecting to login from:', request.nextUrl.pathname);
+    console.log(
+      '🚫 No user found, redirecting to login from:',
+      request.nextUrl.pathname
+    );
     const url = request.nextUrl.clone();
     url.pathname = '/auth/login';
     url.searchParams.set('redirectTo', request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
 
-  console.log('✅ User authenticated, allowing access to:', request.nextUrl.pathname);
+  console.log(
+    '✅ User authenticated, allowing access to:',
+    request.nextUrl.pathname
+  );
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
@@ -100,4 +106,4 @@ export const config = {
      */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-}; 
+};

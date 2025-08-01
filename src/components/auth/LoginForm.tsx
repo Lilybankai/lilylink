@@ -1,17 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase/client';
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import { handleAuthError } from '@/lib/auth/client';
-import { Button, Input, Alert, LoadingButton } from '@/components/ui';
+import { Input, Alert, LoadingButton } from '@/components/ui';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 export function LoginForm() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +30,7 @@ export function LoginForm() {
 
       console.log('🔐 Login Attempt:', {
         email: data.email,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       const { data: authData, error } = await supabase.auth.signInWithPassword({
@@ -44,11 +42,11 @@ export function LoginForm() {
         console.error('🔐 Login Error:', {
           error: error.message,
           code: error.status,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         const authError = handleAuthError(error);
-        
+
         if (authError.field) {
           setError(authError.field as keyof LoginInput, {
             type: 'manual',
@@ -64,7 +62,7 @@ export function LoginForm() {
         console.log('🔐 Login Success:', {
           userId: authData.user.id,
           email: authData.user.email,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         // Check if user has a profile
@@ -77,7 +75,7 @@ export function LoginForm() {
         console.log('👤 Profile Check:', {
           hasProfile: !!profile,
           profileError: profileError?.message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         if (profile) {
@@ -93,7 +91,7 @@ export function LoginForm() {
     } catch (error) {
       console.error('🔐 Login Exception:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
       setAuthError('An unexpected error occurred. Please try again.');
     } finally {
@@ -105,8 +103,8 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* General Error Alert */}
       {authError && (
-        <Alert 
-          variant="error" 
+        <Alert
+          variant="error"
           title="Sign in failed"
           description={authError}
           dismissible
@@ -116,7 +114,10 @@ export function LoginForm() {
 
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Email address
         </label>
         <Input
@@ -135,7 +136,10 @@ export function LoginForm() {
 
       {/* Password Field */}
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Password
         </label>
         <div className="relative">
@@ -178,4 +182,4 @@ export function LoginForm() {
       </LoadingButton>
     </form>
   );
-} 
+}

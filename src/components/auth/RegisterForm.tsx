@@ -8,7 +8,11 @@ import { supabase } from '@/lib/supabase/client';
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
 import { handleAuthError } from '@/lib/auth/client';
 import { Input, LoadingButton, Alert } from '@/components/ui';
-import { EyeIcon, EyeSlashIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  CheckCircleIcon,
+} from '@heroicons/react/24/outline';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -32,7 +36,7 @@ export function RegisterForm() {
 
   const getPasswordStrength = (password: string) => {
     if (!password) return { strength: 0, text: '', color: '' };
-    
+
     let strength = 0;
     if (password.length >= 8) strength++;
     if (/[A-Z]/.test(password)) strength++;
@@ -61,7 +65,7 @@ export function RegisterForm() {
 
       console.log('🔐 Register Attempt:', {
         email: data.email,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       const { data: authData, error } = await supabase.auth.signUp({
@@ -76,11 +80,11 @@ export function RegisterForm() {
         console.error('🔐 Register Error:', {
           error: error.message,
           code: error.status,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         const authError = handleAuthError(error);
-        
+
         if (authError.field) {
           setError(authError.field as keyof RegisterInput, {
             type: 'manual',
@@ -97,7 +101,7 @@ export function RegisterForm() {
           userId: authData.user.id,
           email: authData.user.email,
           emailConfirmed: authData.user.email_confirmed_at,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         if (authData.user.email_confirmed_at) {
@@ -111,7 +115,7 @@ export function RegisterForm() {
     } catch (error) {
       console.error('🔐 Register Exception:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
       setAuthError('An unexpected error occurred. Please try again.');
     } finally {
@@ -125,17 +129,18 @@ export function RegisterForm() {
         <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
           <CheckCircleIcon className="h-8 w-8 text-green-600" />
         </div>
-        
+
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             Check your email
           </h3>
           <p className="text-gray-600 mb-4">
-            We've sent you a confirmation link. Click the link in your email to activate your account.
+            We&apos;ve sent you a confirmation link. Click the link in your
+            email to activate your account.
           </p>
           <p className="text-sm text-gray-500">
-            Didn't receive the email? Check your spam folder or{' '}
-            <button 
+            Didn&apos;t receive the email? Check your spam folder or{' '}
+            <button
               onClick={() => setEmailSent(false)}
               className="text-purple-600 hover:text-purple-700 underline"
             >
@@ -151,8 +156,8 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* General Error Alert */}
       {authError && (
-        <Alert 
-          variant="error" 
+        <Alert
+          variant="error"
           title="Registration failed"
           description={authError}
           dismissible
@@ -162,7 +167,10 @@ export function RegisterForm() {
 
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Email address *
         </label>
         <Input
@@ -181,7 +189,10 @@ export function RegisterForm() {
 
       {/* Password Field */}
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Password *
         </label>
         <div className="relative">
@@ -207,7 +218,7 @@ export function RegisterForm() {
             )}
           </button>
         </div>
-        
+
         {/* Password Strength Indicator */}
         {password && (
           <div className="mt-2">
@@ -220,18 +231,22 @@ export function RegisterForm() {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  passwordStrength.strength <= 1 ? 'bg-red-500' :
-                  passwordStrength.strength <= 2 ? 'bg-orange-500' :
-                  passwordStrength.strength <= 3 ? 'bg-yellow-500' :
-                  passwordStrength.strength <= 4 ? 'bg-blue-500' :
-                  'bg-green-500'
+                  passwordStrength.strength <= 1
+                    ? 'bg-red-500'
+                    : passwordStrength.strength <= 2
+                      ? 'bg-orange-500'
+                      : passwordStrength.strength <= 3
+                        ? 'bg-yellow-500'
+                        : passwordStrength.strength <= 4
+                          ? 'bg-blue-500'
+                          : 'bg-green-500'
                 }`}
                 style={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
               />
             </div>
           </div>
         )}
-        
+
         {errors.password && (
           <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
         )}
@@ -239,7 +254,10 @@ export function RegisterForm() {
 
       {/* Confirm Password Field */}
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Confirm Password *
         </label>
         <div className="relative">
@@ -266,7 +284,9 @@ export function RegisterForm() {
           </button>
         </div>
         {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
 
@@ -286,27 +306,37 @@ export function RegisterForm() {
         <p className="font-medium">Password must contain:</p>
         <ul className="space-y-1 ml-4">
           <li className="flex items-center space-x-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${password?.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`} />
+            <div
+              className={`h-1.5 w-1.5 rounded-full ${password?.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`}
+            />
             <span>At least 8 characters</span>
           </li>
           <li className="flex items-center space-x-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${/[A-Z]/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`} />
+            <div
+              className={`h-1.5 w-1.5 rounded-full ${/[A-Z]/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`}
+            />
             <span>One uppercase letter</span>
           </li>
           <li className="flex items-center space-x-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${/[a-z]/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`} />
+            <div
+              className={`h-1.5 w-1.5 rounded-full ${/[a-z]/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`}
+            />
             <span>One lowercase letter</span>
           </li>
           <li className="flex items-center space-x-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${/\d/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`} />
+            <div
+              className={`h-1.5 w-1.5 rounded-full ${/\d/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`}
+            />
             <span>One number</span>
           </li>
           <li className="flex items-center space-x-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${/[@$!%*?&]/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`} />
+            <div
+              className={`h-1.5 w-1.5 rounded-full ${/[@$!%*?&]/.test(password || '') ? 'bg-green-500' : 'bg-gray-300'}`}
+            />
             <span>One special character</span>
           </li>
         </ul>
       </div>
     </form>
   );
-} 
+}

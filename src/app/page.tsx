@@ -1,10 +1,20 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { motion } from 'framer-motion';
-import { SparklesIcon, ChartBarIcon, PaintBrushIcon, CogIcon } from '@heroicons/react/24/outline';
+import {
+  SparklesIcon,
+  ChartBarIcon,
+  PaintBrushIcon,
+  CogIcon,
+} from '@heroicons/react/24/outline';
 
 export default function Home() {
   return (
@@ -21,7 +31,9 @@ export default function Home() {
               Lilylink
             </h1>
             <p className="mt-6 text-xl leading-8 text-gray-600 max-w-2xl mx-auto">
-              Create stunning, customizable link-in-bio pages with advanced analytics, AI features, and multi-profile management. The vibrant alternative to Linktree.
+              Create stunning, customizable link-in-bio pages with advanced
+              analytics, AI features, and multi-profile management. The vibrant
+              alternative to Linktree.
             </p>
           </motion.div>
 
@@ -58,7 +70,8 @@ export default function Home() {
               Everything you need to stand out
             </h2>
             <p className="mt-4 text-lg leading-8 text-gray-600">
-              Powerful features that help you create beautiful, effective link pages that convert.
+              Powerful features that help you create beautiful, effective link
+              pages that convert.
             </p>
           </div>
 
@@ -75,7 +88,8 @@ export default function Home() {
                   <SparklesIcon className="h-8 w-8 text-purple-600 mb-4" />
                   <CardTitle className="text-purple-900">AI-Powered</CardTitle>
                   <CardDescription>
-                    Smart suggestions for content, colors, and optimization powered by advanced AI.
+                    Smart suggestions for content, colors, and optimization
+                    powered by advanced AI.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -83,9 +97,12 @@ export default function Home() {
               <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
                 <CardHeader>
                   <ChartBarIcon className="h-8 w-8 text-pink-600 mb-4" />
-                  <CardTitle className="text-pink-900">Advanced Analytics</CardTitle>
+                  <CardTitle className="text-pink-900">
+                    Advanced Analytics
+                  </CardTitle>
                   <CardDescription>
-                    Detailed insights into clicks, views, and user behavior with beautiful charts.
+                    Detailed insights into clicks, views, and user behavior with
+                    beautiful charts.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -93,9 +110,12 @@ export default function Home() {
               <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
                 <CardHeader>
                   <PaintBrushIcon className="h-8 w-8 text-blue-600 mb-4" />
-                  <CardTitle className="text-blue-900">Vibrant Design</CardTitle>
+                  <CardTitle className="text-blue-900">
+                    Vibrant Design
+                  </CardTitle>
                   <CardDescription>
-                    Stunning themes and complete customization options that make you stand out.
+                    Stunning themes and complete customization options that make
+                    you stand out.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -103,9 +123,12 @@ export default function Home() {
               <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
                 <CardHeader>
                   <CogIcon className="h-8 w-8 text-emerald-600 mb-4" />
-                  <CardTitle className="text-emerald-900">Multi-Profile</CardTitle>
+                  <CardTitle className="text-emerald-900">
+                    Multi-Profile
+                  </CardTitle>
                   <CardDescription>
-                    Manage multiple profiles and pages from one account. Perfect for agencies.
+                    Manage multiple profiles and pages from one account. Perfect
+                    for agencies.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -127,7 +150,8 @@ export default function Home() {
               Ready to create your stunning link page?
             </h2>
             <p className="mt-6 text-lg leading-8 text-purple-100">
-              Join thousands of creators, businesses, and agencies who trust Lilylink to showcase their content.
+              Join thousands of creators, businesses, and agencies who trust
+              Lilylink to showcase their content.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
@@ -136,7 +160,11 @@ export default function Home() {
                 placeholder="Enter your email"
                 className="bg-white/90 border-white/20 text-gray-900 placeholder:text-gray-500"
               />
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
                 Get Started
               </Button>
             </div>
