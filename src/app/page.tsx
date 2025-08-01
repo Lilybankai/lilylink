@@ -1,102 +1,168 @@
-import Image from "next/image";
+'use client';
+
+import { Button } from '@/components/ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { motion } from 'framer-motion';
+import { SparklesIcon, ChartBarIcon, PaintBrushIcon, CogIcon } from '@heroicons/react/24/outline';
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl font-display bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+              Lilylink
+            </h1>
+            <p className="mt-6 text-xl leading-8 text-gray-600 max-w-2xl mx-auto">
+              Create stunning, customizable link-in-bio pages with advanced analytics, AI features, and multi-profile management. The vibrant alternative to Linktree.
+            </p>
+          </motion.div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-10 flex items-center justify-center gap-x-6"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Button size="lg" className="text-lg px-8 py-4">
+              Get Started Free
+            </Button>
+            <Button variant="secondary" size="lg" className="text-lg px-8 py-4">
+              View Demo
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-8 text-sm text-gray-500"
           >
-            Read our docs
-          </a>
+            No credit card required • Free forever plan available
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl font-display">
+              Everything you need to stand out
+            </h2>
+            <p className="mt-4 text-lg leading-8 text-gray-600">
+              Powerful features that help you create beautiful, effective link pages that convert.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="grid max-w-xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-4"
+            >
+              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                <CardHeader>
+                  <SparklesIcon className="h-8 w-8 text-purple-600 mb-4" />
+                  <CardTitle className="text-purple-900">AI-Powered</CardTitle>
+                  <CardDescription>
+                    Smart suggestions for content, colors, and optimization powered by advanced AI.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
+                <CardHeader>
+                  <ChartBarIcon className="h-8 w-8 text-pink-600 mb-4" />
+                  <CardTitle className="text-pink-900">Advanced Analytics</CardTitle>
+                  <CardDescription>
+                    Detailed insights into clicks, views, and user behavior with beautiful charts.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                <CardHeader>
+                  <PaintBrushIcon className="h-8 w-8 text-blue-600 mb-4" />
+                  <CardTitle className="text-blue-900">Vibrant Design</CardTitle>
+                  <CardDescription>
+                    Stunning themes and complete customization options that make you stand out.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+                <CardHeader>
+                  <CogIcon className="h-8 w-8 text-emerald-600 mb-4" />
+                  <CardTitle className="text-emerald-900">Multi-Profile</CardTitle>
+                  <CardDescription>
+                    Manage multiple profiles and pages from one account. Perfect for agencies.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r from-primary-600 to-secondary-600 py-24 sm:py-32">
+        <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-display">
+              Ready to create your stunning link page?
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-purple-100">
+              Join thousands of creators, businesses, and agencies who trust Lilylink to showcase their content.
+            </p>
+
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                className="bg-white/90 border-white/20 text-gray-900 placeholder:text-gray-500"
+              />
+              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+                Get Started
+              </Button>
+            </div>
+
+            <div className="mt-6 text-sm text-purple-100">
+              Start free, upgrade anytime. No hidden fees.
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-white font-display bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
+              Lilylink
+            </h3>
+            <p className="mt-2 text-gray-400">
+              The beautiful alternative to Linktree
+            </p>
+            <div className="mt-8 text-sm text-gray-500">
+              © 2024 Lilylink. All rights reserved.
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
