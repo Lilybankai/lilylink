@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EyeIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { generateBackgroundStyles, type BackgroundStyleConfig } from '@/lib/utils/backgroundStyles';
+import { SessionTracker, createClickHandler } from '@/lib/api/analytics';
 // Placeholder components for media embeds (to be implemented)
 const SpotifyEmbed = ({ url, autoPlay }: { url: string; autoPlay?: boolean }) => (
   <div className="p-4 bg-green-100 rounded-lg text-center">
@@ -61,7 +62,14 @@ export function EnhancedPublicLinkPage({ linkPage, links, themeConfig: initialTh
     if (!initialThemeConfig) {
       loadThemeConfig();
     }
-    trackPageView();
+    
+    // Initialize analytics tracking
+    const sessionTracker = new SessionTracker(linkPage.id);
+    
+    // Cleanup function to handle component unmount
+    return () => {
+      // SessionTracker handles its own cleanup
+    };
   }, [linkPage.id, initialThemeConfig]);
 
   const loadThemeConfig = async () => {
@@ -77,40 +85,13 @@ export function EnhancedPublicLinkPage({ linkPage, links, themeConfig: initialTh
     }
   };
 
-  const trackPageView = async () => {
-    try {
-      // Track page view (implement your analytics here)
-      const response = await fetch(`/api/analytics/page-view`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pageId: linkPage.id,
-          userAgent: navigator.userAgent,
-          referrer: document.referrer
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setViewCount(data.viewCount || 0);
-      }
-    } catch (error) {
-      console.error('Failed to track page view:', error);
-    }
-  };
-
   const handleLinkClick = async (link: Link) => {
     try {
-      // Track click
-      await fetch(`/api/analytics/link-click`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          linkId: link.id,
-          pageId: linkPage.id,
-          userAgent: navigator.userAgent
-        })
-      });
+      // Create click handler with analytics tracking
+      const clickHandler = createClickHandler(link.id, linkPage.id, link.url);
+      
+      // Execute the click handler (this will track the click)
+      await clickHandler({} as React.MouseEvent);
 
       // Handle different link types
       if (link.link_type === 'contact' && link.contact_type === 'email') {

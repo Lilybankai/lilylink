@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   HomeIcon,
@@ -10,11 +10,15 @@ import {
   UserIcon,
   EyeIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 import { Card, Button, Badge } from '@/components/ui';
 import { LinkPageManager } from './LinkPageManager';
 import { LinkManager } from './LinkManager';
+import { AnalyticsDashboard } from './AnalyticsDashboard';
+import { OrganizationList } from '../organizations/OrganizationList';
+import { OrganizationDashboard } from '../organizations/OrganizationDashboard';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import type { Profile, LinkPage } from '@/types';
@@ -24,11 +28,12 @@ interface DashboardLayoutProps {
   profile: Profile;
 }
 
-type TabType = 'overview' | 'pages' | 'links' | 'analytics' | 'settings';
+type TabType = 'overview' | 'pages' | 'links' | 'analytics' | 'organizations' | 'settings';
 
 export function DashboardLayout({ user, profile }: DashboardLayoutProps) {
   const [activeTab, setActiveTab] = useState<TabType>('pages');
   const [selectedPage, setSelectedPage] = useState<LinkPage | null>(null);
+  const [selectedOrganization, setSelectedOrganization] = useState<any | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
@@ -57,6 +62,12 @@ export function DashboardLayout({ user, profile }: DashboardLayoutProps) {
       description: 'View performance metrics'
     },
     {
+      name: 'Organizations',
+      id: 'organizations' as TabType,
+      icon: BuildingOfficeIcon,
+      description: 'Manage organizations and teams'
+    },
+    {
       name: 'Settings',
       id: 'settings' as TabType,
       icon: Cog6ToothIcon,
@@ -67,6 +78,14 @@ export function DashboardLayout({ user, profile }: DashboardLayoutProps) {
   const handlePageSelect = (page: LinkPage) => {
     setSelectedPage(page);
     setActiveTab('links');
+  };
+
+  const handleOrganizationSelect = (organization: any) => {
+    setSelectedOrganization(organization);
+  };
+
+  const handleBackToOrganizations = () => {
+    setSelectedOrganization(null);
   };
 
   const renderContent = () => {
@@ -83,7 +102,16 @@ export function DashboardLayout({ user, profile }: DashboardLayoutProps) {
       case 'links':
         return <LinkManager selectedPage={selectedPage} />;
       case 'analytics':
-        return <AnalyticsContent />;
+        return <AnalyticsDashboard selectedPage={selectedPage} />;
+      case 'organizations':
+        return selectedOrganization ? (
+          <OrganizationDashboard 
+            organizationId={selectedOrganization.id}
+            onBack={handleBackToOrganizations}
+          />
+        ) : (
+          <OrganizationList onSelectOrganization={handleOrganizationSelect} />
+        );
       case 'settings':
         return <SettingsContent />;
       default:
@@ -238,6 +266,27 @@ export function DashboardLayout({ user, profile }: DashboardLayoutProps) {
 
 // Overview Content Component
 function OverviewContent({ profile }: { profile: Profile }) {
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadQuickStats();
+  }, []);
+
+  const loadQuickStats = async () => {
+    try {
+      const response = await fetch('/api/analytics/dashboard?dateRange=7d');
+      if (response.ok) {
+        const data = await response.json();
+        setAnalytics(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to load quick stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -245,7 +294,7 @@ function OverviewContent({ profile }: { profile: Profile }) {
           Welcome back, {profile?.display_name || profile?.username}! 👋
         </h1>
         <p className="text-gray-600">
-          Here's what's happening with your links today.
+          Here's what's happening with your links this week.
         </p>
       </div>
 
@@ -255,7 +304,9 @@ function OverviewContent({ profile }: { profile: Profile }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-purple-100 text-sm">Total Links</p>
-              <p className="text-3xl font-bold">0</p>
+              <p className="text-3xl font-bold">
+                {loading ? '...' : (analytics?.totalLinks || 0).toLocaleString()}
+              </p>
             </div>
             <LinkIcon className="h-8 w-8 text-purple-200" />
           </div>
@@ -265,7 +316,9 @@ function OverviewContent({ profile }: { profile: Profile }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-pink-100 text-sm">Total Clicks</p>
-              <p className="text-3xl font-bold">0</p>
+              <p className="text-3xl font-bold">
+                {loading ? '...' : (analytics?.totalClicks || 0).toLocaleString()}
+              </p>
             </div>
             <ChartBarIcon className="h-8 w-8 text-pink-200" />
           </div>
@@ -275,7 +328,9 @@ function OverviewContent({ profile }: { profile: Profile }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-100 text-sm">Page Views</p>
-              <p className="text-3xl font-bold">0</p>
+              <p className="text-3xl font-bold">
+                {loading ? '...' : (analytics?.totalViews || 0).toLocaleString()}
+              </p>
             </div>
             <EyeIcon className="h-8 w-8 text-blue-200" />
           </div>
@@ -285,7 +340,9 @@ function OverviewContent({ profile }: { profile: Profile }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100 text-sm">CTR</p>
-              <p className="text-3xl font-bold">0%</p>
+              <p className="text-3xl font-bold">
+                {loading ? '...' : `${(analytics?.clickThroughRate || 0).toFixed(1)}%`}
+              </p>
             </div>
             <ChartBarIcon className="h-8 w-8 text-green-200" />
           </div>
@@ -337,33 +394,7 @@ function OverviewContent({ profile }: { profile: Profile }) {
   );
 }
 
-// Analytics Content Component
-function AnalyticsContent() {
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics</h1>
-        <p className="text-gray-600">
-          Track your link performance and audience engagement.
-        </p>
-      </div>
 
-      <Card className="p-12 text-center">
-        <div className="max-w-sm mx-auto">
-          <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ChartBarIcon className="h-8 w-8 text-blue-600" />
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Analytics Coming Soon
-          </h3>
-          <p className="text-gray-600">
-            Detailed analytics and insights will be available once you start getting clicks on your links.
-          </p>
-        </div>
-      </Card>
-    </div>
-  );
-}
 
 // Settings Content Component
 function SettingsContent() {

@@ -557,4 +557,330 @@ export interface LinkForm {
   description?: string;
   link_type: Link['link_type'];
   is_active: boolean;
+}
+
+// Organization & Agency Types
+export interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  owner_id: string;
+  subscription_tier: 'agency' | 'enterprise';
+  max_profiles: number;
+  custom_branding: Record<string, any>;
+  settings: Record<string, any>;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrganizationMember {
+  id: string;
+  organization_id: string;
+  user_id: string;
+  role: 'owner' | 'admin' | 'member' | 'viewer';
+  permissions: Record<string, any>;
+  is_active: boolean;
+  invited_by?: string;
+  invited_at: string;
+  joined_at?: string;
+  created_at: string;
+  updated_at: string;
+  // Populated when joined with user data
+  user?: Profile;
+}
+
+export interface ManagedProfile {
+  id: string;
+  organization_id: string;
+  profile_id: string;
+  manager_id?: string;
+  access_level: 'view' | 'edit' | 'admin';
+  client_name?: string;
+  client_email?: string;
+  client_notes?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  // Populated when joined
+  profile?: LinkPage;
+  manager?: Profile;
+}
+
+export interface OrganizationInvite {
+  id: string;
+  organization_id: string;
+  email: string;
+  role: 'admin' | 'member' | 'viewer';
+  invited_by: string;
+  token: string;
+  expires_at: string;
+  accepted_at?: string;
+  created_at: string;
+  // Populated when joined
+  inviter?: Profile;
+  organization?: Organization;
+}
+
+// Organization with related data
+export interface OrganizationWithMembers extends Organization {
+  members: OrganizationMember[];
+  managed_profiles: ManagedProfile[];
+  owner: Profile;
+}
+
+// Form types for organizations
+export interface CreateOrganizationInput {
+  name: string;
+  slug: string;
+  subscription_tier?: 'agency' | 'enterprise';
+  max_profiles?: number;
+  custom_branding?: Record<string, any>;
+  settings?: Record<string, any>;
+}
+
+export interface UpdateOrganizationInput {
+  name?: string;
+  slug?: string;
+  max_profiles?: number;
+  custom_branding?: Record<string, any>;
+  settings?: Record<string, any>;
+  is_active?: boolean;
+}
+
+export interface InviteMemberInput {
+  email: string;
+  role: 'admin' | 'member' | 'viewer';
+  permissions?: Record<string, any>;
+}
+
+export interface UpdateMemberInput {
+  role?: 'admin' | 'member' | 'viewer';
+  permissions?: Record<string, any>;
+  is_active?: boolean;
+}
+
+export interface AddManagedProfileInput {
+  profile_id: string;
+  manager_id?: string;
+  access_level: 'view' | 'edit' | 'admin';
+  client_name?: string;
+  client_email?: string;
+  client_notes?: string;
+}
+
+export interface UpdateManagedProfileInput {
+  manager_id?: string;
+  access_level?: 'view' | 'edit' | 'admin';
+  client_name?: string;
+  client_email?: string;
+  client_notes?: string;
+  is_active?: boolean;
+}
+
+// Permission system types
+export interface Permission {
+  resource: string;
+  actions: string[];
+}
+
+export interface RolePermissions {
+  role: 'owner' | 'admin' | 'member' | 'viewer';
+  permissions: Permission[];
+}
+
+// White-label branding types
+export interface WhiteLabelBranding {
+  logo?: {
+    url: string;
+    width?: number;
+    height?: number;
+  };
+  colors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
+  typography?: {
+    fontFamily: string;
+    headingFont?: string;
+  };
+  customCSS?: string;
+  hidePoweredBy: boolean;
+  customDomain?: string;
+  emailTemplates?: {
+    header?: string;
+    footer?: string;
+    brandingText?: string;
+  };
+}
+
+export interface ManagedProfile {
+  id: string;
+  organization_id: string;
+  profile_id: string;
+  manager_id?: string;
+  access_level: 'view' | 'edit' | 'admin';
+  client_name?: string;
+  client_email?: string;
+  client_notes?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  
+  // Populated relations
+  organization?: Organization;
+  profile?: LinkPage;
+  manager?: Profile;
+}
+
+export interface OrganizationInvite {
+  id: string;
+  organization_id: string;
+  email: string;
+  role: 'admin' | 'member' | 'viewer';
+  invited_by: string;
+  token: string;
+  expires_at: string;
+  accepted_at?: string;
+  created_at: string;
+  
+  // Populated relations
+  organization?: Organization;
+  invited_by_user?: Profile;
+}
+
+// Organization Form Types
+export interface CreateOrganizationInput {
+  name: string;
+  slug: string;
+  subscription_tier?: 'agency' | 'enterprise';
+  max_profiles?: number;
+  custom_branding?: Record<string, any>;
+  settings?: Record<string, any>;
+}
+
+export interface UpdateOrganizationInput {
+  name?: string;
+  slug?: string;
+  max_profiles?: number;
+  custom_branding?: Record<string, any>;
+  settings?: Record<string, any>;
+  is_active?: boolean;
+}
+
+export interface InviteMemberInput {
+  organization_id: string;
+  email: string;
+  role: 'admin' | 'member' | 'viewer';
+}
+
+export interface UpdateMemberInput {
+  role?: 'admin' | 'member' | 'viewer';
+  permissions?: Record<string, any>;
+  is_active?: boolean;
+}
+
+export interface CreateManagedProfileInput {
+  organization_id: string;
+  profile_id: string;
+  manager_id?: string;
+  access_level?: 'view' | 'edit' | 'admin';
+  client_name?: string;
+  client_email?: string;
+  client_notes?: string;
+}
+
+export interface UpdateManagedProfileInput {
+  manager_id?: string;
+  access_level?: 'view' | 'edit' | 'admin';
+  client_name?: string;
+  client_email?: string;
+  client_notes?: string;
+  is_active?: boolean;
+}
+
+// Extended types with organization context
+export interface OrganizationWithMembers extends Organization {
+  members: OrganizationMember[];
+  managed_profiles: ManagedProfile[];
+  member_count: number;
+  profile_count: number;
+}
+
+export interface ProfileWithOrganization extends Profile {
+  organizations: OrganizationMember[];
+  managed_by: ManagedProfile[];
+}
+
+// Permission checking
+export interface OrganizationPermissions {
+  canManageMembers: boolean;
+  canManageProfiles: boolean;
+  canViewAnalytics: boolean;
+  canEditSettings: boolean;
+  canDeleteOrganization: boolean;
+  canInviteMembers: boolean;
+  canRemoveMembers: boolean;
+  canEditBranding: boolean;
+}
+
+// Agency Dashboard Types
+export interface AgencyDashboardData {
+  organization: OrganizationWithMembers;
+  totalProfiles: number;
+  totalClicks: number;
+  totalViews: number;
+  recentActivity: Array<{
+    type: 'profile_created' | 'member_joined' | 'link_clicked' | 'profile_viewed';
+    timestamp: string;
+    profile_name?: string;
+    member_name?: string;
+    link_title?: string;
+  }>;
+  topPerformingProfiles: Array<{
+    id: string;
+    title: string;
+    slug: string;
+    clicks: number;
+    views: number;
+    ctr: number;
+  }>;
+  memberActivity: Array<{
+    member: OrganizationMember;
+    last_active: string;
+    profiles_managed: number;
+  }>;
+}
+
+// White-label branding
+export interface WhiteLabelConfig {
+  logo?: {
+    url: string;
+    width?: number;
+    height?: number;
+  };
+  colors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
+  typography?: {
+    fontFamily: string;
+    headingFont?: string;
+  };
+  branding?: {
+    hideFooter: boolean;
+    customFooterText?: string;
+    customLoginPage?: boolean;
+    customEmailTemplates?: boolean;
+  };
+  domain?: {
+    custom: string;
+    subdomain?: string;
+  };
 } 

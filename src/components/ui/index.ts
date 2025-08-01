@@ -40,6 +40,7 @@ export { BorderCustomizer } from './BorderCustomizer';
 export { AnimationSelector } from './AnimationSelector';
 export { BrandKitSelector } from './BrandKitSelector';
 export { TypographyCustomizer } from './TypographyCustomizer';
+export { AnalyticsConsent, AnalyticsConsentUtil } from './AnalyticsConsent';
 export { BackgroundCustomizer } from './BackgroundCustomizer';
 export { BrandAssetsManager } from './BrandAssetsManager';
 export { CSSEditor } from './CSSEditor';
